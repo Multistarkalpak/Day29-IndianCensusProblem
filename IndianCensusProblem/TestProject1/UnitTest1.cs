@@ -4,12 +4,17 @@ namespace IndianStatesCensusTesting
 {
     public class Tests
     {
-        string stateCensusFilePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\IndianPopulation.csv";
-        string wrongFilePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\WrongIndianPopulation.csv";
-        string wrongTypeFilePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\IndianPopulation.txt";
-        string wrongDelimiterFilePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\DelimiterIndiaStateCensusData.csv";
-        string wrongHeaderFilePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\WrongIndiaStateCensusData.csv";
-        string stateCodePath = @"C:\Users\kalpak\Desktop\Assignments\Day29\Day28_IndianCensusProblem\CensusAnalyser\CensusAnalyser\CSVFiles\IndiaStateCode.csv";
+        string stateCensusFilePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\IndianPopulation.csv";
+        string wrongFilePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\WrongIndianPopulation.csv";
+        string wrongTypeFilePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\IndianPopulation.txt";
+        string wrongDelimiterFilePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\DelimiterIndiaStateCensusData.csv";
+        string wrongHeaderFilePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\WrongIndiaStateCensusData.csv";
+        string stateCodePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\IndiaStateCode.csv";
+        string wrongStateCodePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\WrongIndiaStateCde.csv";
+        string wrongTypeStateCodePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\IndiaStateCode.txt";
+        string delimiterStateCodePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\DelimiterIndiaStateCode.csv";
+        string wrongHeaderStateCodePath = @"C:/Users/kalpak/Desktop/Assignments/Day29/Day28_IndianCensusProblem/CensusAnalyser/CensusAnalyser/CSVFiles\DelimiterIndiaStateCensusData.csv";
+
         public CSVAdapterFactory csvAdapter = null;
         Dictionary<string, CensusDTO> stateRecords = null;
         Dictionary<string, CensusDTO> totalRecords;
@@ -81,6 +86,45 @@ namespace IndianStatesCensusTesting
         {
             totalRecords = csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, stateCodePath, "SrNo,State Name,TIN,StateCode");
             Assert.AreEqual(37, totalRecords.Count);
+        }
+        [Test]
+        public void GivenStateCodeReturnCount1()
+        {
+            totalRecords = csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, stateCodePath, "SrNo,State Name,TIN,StateCode");
+            Assert.AreEqual(37, totalRecords.Count);
+        }
+        /// <summary>
+        /// /// TC 2.2 Giving incorrect path should return file not found custom exception
+        /// </summary>
+        [Test]
+        public void GivenIncorrectPathCodeCustomException()
+        {
+            var stateCustomException = Assert.Throws<CensusAnalyserException>(() => csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, wrongStateCodePath, "SrNo,State Name,TIN,StateCode"));
+            Assert.AreEqual(stateCustomException.exception, CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
+        }
+        /// TC 2.3
+        /// Giving wrong type of path should return invalid file type custom exception
+        [Test]
+        public void GivenIncorrectPathTypeCodeReturnException()
+        {
+            var customException = Assert.Throws<CensusAnalyserException>(() => csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, wrongTypeStateCodePath, "SrNo,State Name,TIN,StateCode"));
+            Assert.AreEqual(customException.exception, CensusAnalyserException.ExceptionType.INVALID_FILE_TYPE);
+        }
+        /// TC 2.4
+        /// Giving wrong delimiter should return incorrect delimiter custom exception
+        [Test]
+        public void GivenWrongHeaderStateCodeReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, delimiterStateCodePath, "SrNo,State Name,TIN,StateCode"));
+            Assert.AreEqual(stateException.exception, CensusAnalyserException.ExceptionType.INCOREECT_DELIMITER);
+        }
+        /// TC 2.5
+        /// Giving wrong header type should return incorrect header type custom exception
+        [Test]
+        public void GivenWrongDelimiterCodeReturnCustomException()
+        {
+            var stateException = Assert.Throws<CensusAnalyserException>(() => csvAdapter.LoadCsvData(CensusAnalyser.Country.INDIA, wrongHeaderStateCodePath, "SrNo,State Name,TIN,StateCode"));
+            Assert.AreEqual(stateException.exception, CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
         }
 
     }
